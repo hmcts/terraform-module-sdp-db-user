@@ -11,3 +11,10 @@ terraform {
     }
   }
 }
+
+provider "azurerm" {
+  features {}
+  skip_provider_registration = true
+  alias                      = "vault"
+  subscription_id            = local.environment[var.env].subscription
+}
