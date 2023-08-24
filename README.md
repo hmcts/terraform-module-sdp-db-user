@@ -15,13 +15,6 @@ provider "azurerm" {
   alias                      = "postgres_network"
   subscription_id            = var.aks_subscription_id
 }
-
-provider "azurerm" {
-  features {}
-  skip_provider_registration = true
-  alias                      = "vault"
-  subscription_id            = local.environment[var.env].subscription
-}
 ```
 
 postgres.tf
@@ -30,7 +23,6 @@ module "sdp_db_user" {
 
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
-    azurerm.vault            = azurerm.vault
   }
   
   source = "git@github.com:hmcts/terraform-module-sdp-db-user?ref=master"
@@ -51,40 +43,6 @@ variables.tf
 variable "aks_subscription_id" {} # provided by the Jenkins library, ADO users will need to specify this
 ```
 
-interpolated-defaults.tf
-```hcl
-locals {
-  sdp_cft_environments_map = {
-    sandbox  = "sbox"
-    aat      = "dev"
-    perftest = "test"
-  }
-
-  sdp_environment = lookup(local.sdp_cft_environments_map, var.env, var.env)
-  
-  environment = {
-    sbox = {
-      subscription = "a8140a9e-f1b0-481f-a4de-09e2ee23f7ab"
-    }
-    dev = {
-      subscription = "867a878b-cb68-4de5-9741-361ac9e178b6"
-    }
-    test = {
-      subscription = "3eec5bde-7feb-4566-bfb6-805df6e10b90"
-    }
-    ithc = {
-      subscription = "ba71a911-e0d6-4776-a1a6-079af1df7139"
-    }
-    stg = {
-      subscription = "74dacd4f-a248-45bb-a2f0-af700dc4cf68"
-    }
-    prod = {
-      subscription = "5ca62022-6aa2-4cee-aaa7-e7536c8d566c"
-    }
-  }
-}
-```
-
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -100,7 +58,6 @@ locals {
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.7.0 |
 | <a name="provider_azurerm.postgres_network"></a> [azurerm.postgres\_network](#provider\_azurerm.postgres\_network) | >= 3.7.0 |
-| <a name="provider_azurerm.vault"></a> [azurerm.vault](#provider\_azurerm.vault) | >= 3.7.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.2.0 |
 
