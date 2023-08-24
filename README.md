@@ -15,13 +15,6 @@ provider "azurerm" {
   alias                      = "postgres_network"
   subscription_id            = var.aks_subscription_id
 }
-
-provider "azurerm" {
-  features {}
-  skip_provider_registration = true
-  alias                      = "vault"
-  subscription_id            = var.vault_subscription_id
-}
 ```
 
 postgres.tf
@@ -30,18 +23,17 @@ module "sdp_db_user" {
 
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
-    azurerm.vault            = azurerm.vault
   }
-  
+
   source = "git@github.com:hmcts/terraform-module-sdp-db-user?ref=master"
   env    = var.env
-  
+
   server_name       = "${var.product}-${var.component}"
   server_fqdn       = module.terraform-module-postgres-flexible.fqdn
   server_admin_user = module.terraform-module-postgres-flexible.username
   server_admin_pass = module.terraform-module-postgres-flexible.password
   databases         = var.databases
-  
+
   common_tags = var.common_tags
 }
 ```
@@ -49,8 +41,6 @@ module "sdp_db_user" {
 variables.tf
 ```hcl
 variable "aks_subscription_id" {} # provided by the Jenkins library, ADO users will need to specify this
-
-variable "vault_subscription_id" {} # details on how to retrieve this soon
 ```
 
 

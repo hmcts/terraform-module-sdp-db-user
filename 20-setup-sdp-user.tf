@@ -1,20 +1,3 @@
-locals {
-  sdp_read_user = "SDP_READ_USER"
-
-  sdp_cft_environments_map = {
-    sandbox  = "sbox"
-    aat      = "dev"
-    perftest = "test"
-  }
-
-  sdp_environment = lookup(local.sdp_cft_environments_map, var.env, var.env)
-
-  sdp_vault = {
-    name = "mi-vault-${local.sdp_environment}"
-    rg   = "mi-${local.sdp_environment}-rg"
-  }
-}
-
 resource "random_password" "sdp_read_user_password" {
   length = 20
   # safer set of special characters for pasting in the shell
@@ -22,14 +5,14 @@ resource "random_password" "sdp_read_user_password" {
 }
 
 data "azurerm_key_vault" "sdp_vault" {
-  provider = vault
+  provider = azurerm.vault
 
   name                = local.sdp_vault.name
   resource_group_name = local.sdp_vault.rg
 }
 
 resource "azurerm_key_vault_secret" "sdp_vault_sdp_read_user_password" {
-  provider = vault
+  provider = azurerm.vault
 
   name         = "${var.server_name}-read-user-password"
   value        = random_password.sdp_read_user_password.result
