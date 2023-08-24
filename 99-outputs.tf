@@ -3,5 +3,6 @@ output "username" {
 }
 
 output "password" {
-  value = random_password.sdp_read_user_password.result
+  value     = random_password.sdp_read_user_password.result
+  sensitive = true
 }

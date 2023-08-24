@@ -26,6 +26,7 @@ variable "server_admin_user" {
 variable "server_admin_pass" {
   description = "Password of the server admin user."
   type        = string
+  sensitive   = true
 }
 
 variable "databases" {
