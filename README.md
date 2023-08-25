@@ -1,5 +1,5 @@
 # terraform-module-sdp-db-user
-Terraform module to add a database user to a specified database.
+Terraform module to add a read only SDP user to a specified databases.
 
 ## Example
 
@@ -12,8 +12,8 @@ provider "azurerm" {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-  alias                      = "vault"
-  subscription_id            = var.vault_subscription_id
+  alias                      = "postgres_network"
+  subscription_id            = var.aks_subscription_id
 }
 ```
 
@@ -22,16 +22,17 @@ postgres.tf
 module "sdp_db_user" {
 
   providers = {
-    azurerm.vault = azurerm.vault
+    azurerm.postgres_network = azurerm.postgres_network
   }
   
   source = "git@github.com:hmcts/terraform-module-sdp-db-user?ref=master"
   env    = var.env
   
-  database_name       = "${var.product}-${var.component}"
-  database_host_name  = module.terraform-module-postgres-flexible.fqdn
-  database_admin_user = module.terraform-module-postgres-flexible.username
-  database_admin_pass = module.terraform-module-postgres-flexible.password
+  server_name       = "${var.product}-${var.component}"
+  server_fqdn       = module.terraform-module-postgres-flexible.fqdn
+  server_admin_user = module.terraform-module-postgres-flexible.username
+  server_admin_pass = module.terraform-module-postgres-flexible.password
+  databases         = var.databases
   
   common_tags = var.common_tags
 }
@@ -39,7 +40,7 @@ module "sdp_db_user" {
 
 variables.tf
 ```hcl
-variable "vault_subscription_id" {} # details on how to retrieve this soon
+variable "aks_subscription_id" {} # provided by the Jenkins library, ADO users will need to specify this
 ```
 
 
@@ -56,7 +57,7 @@ variable "vault_subscription_id" {} # details on how to retrieve this soon
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.7.0 |
-| <a name="provider_azurerm.vault"></a> [azurerm.vault](#provider\_azurerm.vault) | >= 3.7.0 |
+| <a name="provider_azurerm.postgres_network"></a> [azurerm.postgres\_network](#provider\_azurerm.postgres\_network) | >= 3.7.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.2.0 |
 
@@ -65,7 +66,7 @@ variable "vault_subscription_id" {} # details on how to retrieve this soon
 | Name | Type |
 |------|------|
 | [azurerm_key_vault_secret.vault_sdp_read_user_password](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret) | resource |
-| [null_resource.set-sdp-db-user](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.setup-sdp-db-user](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_password.sdp_read_user_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [azurerm_key_vault.sdp_vault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 
@@ -73,16 +74,21 @@ variable "vault_subscription_id" {} # details on how to retrieve this soon
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_database_host_name"></a> [database\_host\_name](#input\_database\_host\_name) | Fully qualified domain name of the database to add the user to. | `string` | n/a | yes |
-| <a name="input_database_admin_user"></a> [database\_admin\_user](#input\_database\_admin\_user) | Username of a database user with required permissions to create a read user. | `string` | n/a | yes |
-| <a name="input_database_admin_pass"></a> [database\_admin\_pass](#input\_database\_admin\_pass) | Password of the database user. | `string` | n/a | yes |
+| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Common tag to be applied to resources. | `map(string)` | n/a | yes |
+| <a name="input_databases"></a> [databases](#input\_databases) | List of databases on the server to grant permissions to the SDP user. | `list(object)` | n/a | yes |
+| <a name="input_env"></a> [env](#input\_env) | Environment value. | `string` | n/a | yes |
+| <a name="input_server_admin_pass"></a> [server\_admin\_pass](#input\_server\_admin\_pass) | Password of the server admin user. | `string` | n/a | yes |
+| <a name="input_server_admin_user"></a> [server\_admin\_user](#input\_server\_admin\_user) | Username of a server admin user with required permissions to create a read user. | `string` | n/a | yes |
+| <a name="input_server_fqdn"></a> [server\_fqdn](#input\_server\_fqdn) | Fully qualified domain name of the server to add the user to. | `string` | n/a | yes |
+| <a name="input_server_name"></a> [server\_name](#input\_server\_name) | Name of the server. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_sdp_username"></a> [username](#output\_username) | Username for the SDP database user created. |
-| <a name="output_sdp_password"></a> [password](#output\_password) | Password for the SDP database user created. |
+| <a name="output_sdp_password"></a> [password](#output\_password) | Password for the SDP user created. |
+| <a name="output_sdp_username"></a> [username](#output\_username) | Username for the SDP user created. |
+
 <!-- END_TF_DOCS -->
 
 ## Contributing
