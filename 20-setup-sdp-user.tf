@@ -5,14 +5,14 @@ resource "random_password" "sdp_read_user_password" {
 }
 
 data "azurerm_key_vault" "sdp_vault" {
-  provider = azurerm.vault
+  provider = azurerm.sdp_vault
 
   name                = local.sdp_vault.name
   resource_group_name = local.sdp_vault.rg
 }
 
 resource "azurerm_key_vault_secret" "sdp_vault_sdp_read_user_password" {
-  provider = azurerm.vault
+  provider = azurerm.sdp_vault
 
   name         = "${var.server_name}-read-user-password"
   value        = random_password.sdp_read_user_password.result
