@@ -3,6 +3,8 @@ Terraform module to add a read only SDP user to a specified databases.
 
 ## Example
 
+See the example directory for a more full example.
+
 provider.tf
 ```hcl
 provider "azurerm" {
@@ -27,7 +29,6 @@ provider "azurerm" {
 postgres.tf
 ```hcl
 module "sdp_db_user" {
-
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
     azurerm.sdp_vault        = azurerm.sdp_vault
