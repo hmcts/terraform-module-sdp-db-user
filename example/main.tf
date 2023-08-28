@@ -28,8 +28,6 @@ module "sdp_read_user" {
   }
   
   source = "../"
-  env    = var.env
-
   env    = local.sdp_environment
 
   server_name       = "sdp-example"

@@ -1,4 +1,4 @@
-variable "sdp_environment" {
+variable "env" {
   description = "Environment value."
   type        = string
 }
