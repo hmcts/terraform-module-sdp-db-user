@@ -22,7 +22,7 @@ provider "azurerm" {
   features {}
   skip_provider_registration = true
   alias                      = "sdp_vault"
-  subscription_id            = local.sdp_environment_ids[local.sdp_environment].subscription
+  subscription_id            = local.sdp_environment_ids[local.sdp_environment].subscription # or var.sdp_subscription_id. See below.
 }
 ```
 
@@ -50,6 +50,8 @@ module "sdp_db_user" {
 variables.tf
 ```hcl
 variable "aks_subscription_id" {} # provided by the Jenkins library, ADO users will need to specify this
+
+variable "sdp_subscription_id" {} # either this or pass in the map as a local. See below.
 ```
 
 interpolated-defaults.tf
@@ -63,6 +65,7 @@ locals {
 
   sdp_environment = lookup(local.sdp_cft_environments_map, var.env, var.env)
 
+  # either this or pass in the SDS subscription ID as a variable. See above.
   sdp_environment_ids = {
     sbox = {
       subscription = "a8140a9e-f1b0-481f-a4de-09e2ee23f7ab"
