@@ -26,7 +26,7 @@ module "sdp_db_user" {
     azurerm.sdp_vault = azurerm.sdp_vault
   }
   
-  source = "git::https://github.com/hmcts/terraform-module-postgresql-flexible.git?ref=master"
+  source = "git::https://github.com/hmcts/terraform-module-sdp-db-user.git?ref=master"
   env    = local.sdp_environment
   
   server_name       = "${var.product}-${var.component}"
