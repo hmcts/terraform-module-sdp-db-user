@@ -14,34 +14,26 @@ provider "azurerm" {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-  alias                      = "postgres_network"
-  subscription_id            = var.aks_subscription_id
-}
-
-provider "azurerm" {
-  features {}
-  skip_provider_registration = true
   alias                      = "sdp_vault"
   subscription_id            = local.sdp_environment_ids[local.sdp_environment].subscription # or var.sdp_subscription_id. See below.
 }
 ```
 
-postgres.tf
+sdp_db_user.tf
 ```hcl
 module "sdp_db_user" {
   providers = {
-    azurerm.postgres_network = azurerm.postgres_network
     azurerm.sdp_vault        = azurerm.sdp_vault
   }
   
-  source = "git@github.com:hmcts/terraform-module-sdp-db-user?ref=master"
+  source = "git::https://github.com/hmcts/terraform-module-postgresql-flexible.git?ref=master"
   env    = local.sdp_environment
   
   server_name       = "${var.product}-${var.component}"
   server_fqdn       = module.terraform-module-postgres-flexible.fqdn
   server_admin_user = module.terraform-module-postgres-flexible.username
   server_admin_pass = module.terraform-module-postgres-flexible.password
-  databases         = var.databases
+  databases         = var.databases # [{"name": "database_name"}] format
   
   common_tags = var.common_tags
 }
@@ -49,8 +41,6 @@ module "sdp_db_user" {
 
 variables.tf
 ```hcl
-variable "aks_subscription_id" {} # provided by the Jenkins library, ADO users will need to specify this
-
 variable "sdp_subscription_id" {} # either this or pass in the map as a local. See below.
 ```
 
@@ -88,7 +78,6 @@ locals {
   }
 }
 ```
-
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

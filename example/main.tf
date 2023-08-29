@@ -4,7 +4,7 @@ module "postgresql" {
     azurerm.postgres_network = azurerm.postgres_network
   }
 
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git::https://github.com/hmcts/terraform-module-postgresql-flexible.git?ref=master"
   env    = var.env
 
   product       = "sdp"
@@ -23,7 +23,6 @@ module "postgresql" {
 module "sdp_read_user" {
 
   providers = {
-    azurerm.postgres_network = azurerm.postgres_network
     azurerm.sdp_vault        = azurerm.sdp_vault
   }
   
@@ -46,7 +45,7 @@ module "sdp_read_user" {
 # only for use when building from ADO and as a quick example to get valid tags
 # if you are building from Jenkins use `var.common_tags` provided by the pipeline
 module "common_tags" {
-  source = "github.com/hmcts/terraform-module-common-tags?ref=master"
+  source = "git::https://github.com/hmcts/terraform-module-common-tags.git?ref=master"
 
   builtFrom   = "hmcts/terraform-module-sdp-db-user"
   environment = var.env
