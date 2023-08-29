@@ -9,3 +9,9 @@ variable "sdp_vault_rg_name" {
   type        = string
   default     = null
 }
+
+variable "sdp_read_username" {
+  description = "Username of the SDP reader user."
+  type        = string
+  default     = null
+}

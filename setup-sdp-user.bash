@@ -27,11 +27,8 @@ SDP_SQL_COMMAND="
 DO
 \$do\$
 BEGIN
-   IF NOT EXISTS (
-      SELECT FROM pg_catalog.pg_roles WHERE rolname = '${DB_SDP_USER}') THEN
-
+   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = '${DB_SDP_USER}') THEN
       CREATE USER \"${DB_SDP_USER}\" WITH PASSWORD '${DB_SDP_PASS}';
-
    END IF;
 
    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO PUBLIC;
@@ -42,6 +39,11 @@ END
 \$do\$;
 "
 
-if [[ ${DB_ADD_SDP_USER} == "true" ]]; then
-  psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
-fi
+psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
+
+## Validation
+export PGPASSWORD=$DB_SDP_PASS
+
+VALIDATE_COMMAND="SELECT * FROM information_schema.tables;"
+
+psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_SDP_USER}'" -c "${VALIDATE_COMMAND}"
