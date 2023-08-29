@@ -23,7 +23,7 @@ module "postgresql" {
 module "sdp_read_user" {
 
   providers = {
-    azurerm.sdp_vault        = azurerm.sdp_vault
+    azurerm.sdp_vault = azurerm.sdp_vault
   }
   
   source = "../"

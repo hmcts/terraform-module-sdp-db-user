@@ -23,7 +23,7 @@ sdp_db_user.tf
 ```hcl
 module "sdp_db_user" {
   providers = {
-    azurerm.sdp_vault        = azurerm.sdp_vault
+    azurerm.sdp_vault = azurerm.sdp_vault
   }
   
   source = "git::https://github.com/hmcts/terraform-module-postgresql-flexible.git?ref=master"
