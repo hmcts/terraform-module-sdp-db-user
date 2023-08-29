@@ -15,7 +15,7 @@ resource "azurerm_key_vault_secret" "sdp_vault_sdp_read_user_password" {
   key_vault_id = data.azurerm_key_vault.sdp_vault.id
 }
 
-resource "null_resource" "set-user-permissions-additionaldbs" {
+resource "null_resource" "setup_sdp_user" {
   for_each = { for index, db in var.databases : db.name => db }
 
   triggers = {
