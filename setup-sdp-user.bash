@@ -42,6 +42,9 @@ END
 psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
 
 ## Validation
+echo "Waiting 15 seconds for permissions to propagate"
+sleep 15
+
 export PGPASSWORD=$DB_SDP_PASS
 
 VALIDATE_COMMAND="SELECT * FROM information_schema.tables;"
