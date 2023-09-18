@@ -42,8 +42,6 @@ END
 psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
 
 ## Validation
-export PGPASSWORD=$DB_SDP_PASS
-
 VALIDATE_COMMAND="SELECT * FROM information_schema.tables;"
 
-psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_SDP_USER}'" -c "${VALIDATE_COMMAND}"
+PGPASSWORD=$DB_SDP_PASS psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_SDP_USER}'" -c "${VALIDATE_COMMAND}"

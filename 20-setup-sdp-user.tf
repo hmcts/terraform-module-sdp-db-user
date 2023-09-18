@@ -49,4 +49,9 @@ resource "null_resource" "setup_sdp_user" {
       DB_SDP_PASS     = random_password.sdp_read_user_password.result
     }
   }
+
+  depends_on = [
+    azurerm_key_vault_secret.sdp_vault_sdp_read_user_name,
+    azurerm_key_vault_secret.sdp_vault_sdp_read_user_password
+  ]
 }
