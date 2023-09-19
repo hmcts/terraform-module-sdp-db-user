@@ -47,7 +47,7 @@ resource "null_resource" "setup_sdp_user" {
       DB_PASSWORD     = var.server_admin_pass
       DB_SDP_USER     = local.sdp_read_user
       DB_SDP_PASS     = random_password.sdp_read_user_password.result
-      DB_SCHEMAS      = var.database_schemas[each.value.name]
+      DB_SCHEMAS      = lookup(var.database_schemas, each.value.name, [])
     }
   }
 
