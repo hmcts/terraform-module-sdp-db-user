@@ -55,7 +55,7 @@ do
   \$do\$;
   "
 
-  psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" --echo-all -c "${SDP_SCHEMA_SQL_COMMAND}"
+  psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SCHEMA_SQL_COMMAND}"
 done
 
 ## Validation
