@@ -43,6 +43,21 @@ END
 
 psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
 
+for schema in ${DB_SCHEMAS//,/$IFS}
+do
+  SDP_SCHEMA_SQL_COMMAND="
+  DO
+  \$do\$
+  BEGIN
+     GRANT USAGE ON SCHEMA ${schema} TO \"${DB_SDP_USER}\";
+     GRANT SELECT ON ALL TABLES IN SCHEMA ${schema} TO \"${DB_SDP_USER}\";
+  END
+  \$do\$;
+  "
+
+  psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SCHEMA_SQL_COMMAND}"
+done
+
 ## Validation
 VALIDATE_COMMAND="SELECT * FROM information_schema.tables;"
 
