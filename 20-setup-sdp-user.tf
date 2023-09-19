@@ -31,7 +31,7 @@ resource "null_resource" "setup_sdp_user" {
   for_each = { for index, db in var.databases : db.name => db }
 
   triggers = {
-    script_hash       = nonsensitive(filesha256("${path.module}/setup-sdp-user.bash"))
+    script_hash       = filesha256("${path.module}/setup-sdp-user.bash")
     name              = var.server_name
     fqdn              = var.server_fqdn
     database          = each.value.name
