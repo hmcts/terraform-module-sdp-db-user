@@ -17,7 +17,7 @@ variable "sdp_read_username" {
 }
 
 variable "database_schemas" {
-  description = "Map of databases on the server and associated schemas to grant read permission to."
-  type        = map(string, list(string))
+  description = "Map of databases on the server to their associated schemas to grant read permission to."
+  type        = map(list(string))
   default     = {}
 }
