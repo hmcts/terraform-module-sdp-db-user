@@ -33,8 +33,9 @@ resource "null_resource" "setup_sdp_user" {
   triggers = {
     script_hash       = filesha256("${path.module}/setup-sdp-user.bash")
     name              = var.server_name
-    databases         = var.databases
-    schemas           = var.database_schemas
+    fqdn              = var.server_fqdn
+    database          = each.value.name
+    schemas           = join(",", lookup(var.database_schemas, each.value.name, []))
     sdp_reader_user   = local.sdp_read_user
     sdp_reader_pass   = random_password.sdp_read_user_password.result
   }
