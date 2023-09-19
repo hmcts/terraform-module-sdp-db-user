@@ -39,9 +39,9 @@ END
 \$do\$;
 "
 
-psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
+psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" --echo-all -c "${SDP_SQL_COMMAND}"
 
 ## Validation
 VALIDATE_COMMAND="SELECT * FROM information_schema.tables;"
 
-PGPASSWORD=$DB_SDP_PASS psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_SDP_USER}'" -c "${VALIDATE_COMMAND}"
+PGPASSWORD=$DB_SDP_PASS psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_SDP_USER}'" --echo-all -c "${VALIDATE_COMMAND}"
