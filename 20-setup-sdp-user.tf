@@ -37,7 +37,7 @@ resource "null_resource" "setup_sdp_user" {
     database          = each.value.name
     schemas           = join(",", lookup(var.database_schemas, each.value.name, []))
     sdp_reader_user   = local.sdp_read_user
-    sdp_reader_pass   = nonsensitive(random_password.sdp_read_user_password.result)
+    sdp_reader_pass   = random_password.sdp_read_user_password.result
   }
 
   provisioner "local-exec" {
@@ -47,9 +47,9 @@ resource "null_resource" "setup_sdp_user" {
       DB_HOST_NAME    = var.server_fqdn
       DB_NAME         = each.value.name
       DB_ADMIN        = var.server_admin_user
-      DB_PASSWORD     = nonsensitive(var.server_admin_pass)
+      DB_PASSWORD     = var.server_admin_pass
       DB_SDP_USER     = local.sdp_read_user
-      DB_SDP_PASS     = nonsensitive(random_password.sdp_read_user_password.result)
+      DB_SDP_PASS     = random_password.sdp_read_user_password.result
       DB_SCHEMAS      = join(",", lookup(var.database_schemas, each.value.name, []))
     }
   }
