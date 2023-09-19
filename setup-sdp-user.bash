@@ -43,9 +43,7 @@ END
 
 psql "sslmode=require host=${DB_HOST_NAME} port=5432 dbname=${DB_NAME} user='${DB_ADMIN}'" -c "${SDP_SQL_COMMAND}"
 
-echo $DB_SCHEMAS
-
-for schema in $DB_SCHEMAS
+for schema in ${DB_SCHEMAS//,/$IFS}
 do
   SDP_SCHEMA_SQL_COMMAND="
   DO
